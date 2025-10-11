@@ -89,7 +89,7 @@ export default function App() {
 
           if (!res.ok) throw new Error("failed to fetch movies");
           const data = await res.json();
-          console.log(data);
+
           if (data.Response === "False")
             throw new Error("Movies could not be found");
           setMovies(data.Search);
@@ -260,7 +260,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
         );
 
         const data = await res.json();
-        console.log(data);
 
         setMovie(data);
         setIsLoading(false);
@@ -269,6 +268,14 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       getMovieDetails();
     },
     [selectedId]
+  );
+
+  useEffect(
+    function () {
+      if (!title) return;
+      document.title = `movie|${title}`;
+    },
+    [title]
   );
 
   return (
