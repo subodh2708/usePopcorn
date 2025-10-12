@@ -54,12 +54,12 @@ const average = (arr) =>
 const KEY = "e109397d";
 
 export default function App() {
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedId, setSelectedId] = useState("tt1375666");
+  const [selectedId, setSelectedId] = useState("");
 
   function handleSelectedMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -112,6 +112,8 @@ export default function App() {
         return;
       }
 
+      handleCloseMovie();
+
       fetchMovies();
 
       return function () {
@@ -128,11 +130,13 @@ export default function App() {
         <NumResult movies={movies} />
       </NavBar>
       <Main>
-        {isLoading && <Loader />}
-        {!isLoading && !error && (
-          <MovieList movies={movies} onSelectedMovie={handleSelectedMovie} />
-        )}
-        {error && <ErrorMassage message={error} />}
+        <Box>
+          {isLoading && <Loader />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} onSelectedMovie={handleSelectedMovie} />
+          )}
+          {error && <ErrorMassage message={error} />}
+        </Box>
         <Box>
           {selectedId ? (
             <MovieDetails
@@ -259,6 +263,24 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     onAddWatched(newWatchedMovie);
     onCloseMovie();
   }
+
+  useEffect(
+    function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+          console.log("Closing");
+        }
+      }
+
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
 
   useEffect(
     function () {
