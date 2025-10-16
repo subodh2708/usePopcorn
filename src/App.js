@@ -15,11 +15,6 @@ export default function App() {
   const { movies, isLoading, error } = useMovies(query);
   const [watched, setWatched] = useLocalStorageState([], "watched");
 
-  // const [watched, setWatched] = useState(function () {
-  //   const storedValue = localStorage.getItem("watched");
-  //   return JSON.parse(storedValue);
-  // });
-
   function handleSelectedMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
   }
@@ -199,7 +194,6 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
 
   useEffect(
     function () {
-      console.log(countRef.current);
       if (userRating) countRef.current++;
     },
     [userRating]
@@ -272,6 +266,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
               <p>
                 {released} &bull; {runtime}
               </p>
+              <p>{genre}</p>
               <p>
                 <span>⭐</span>
                 {imdbRating} IMDB rating
